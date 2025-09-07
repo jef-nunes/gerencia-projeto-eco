@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<!-- Tela de gerenciamento do Projeto Eco -->
+<!-- Desenvolvida para dispositivos desktop -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento - Projeto Eco</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header>
+        <div class="logo-titulo-container">
+            <img class="logo" src="images/tucano.png" alt="Logo">
+            <div>
+                <h1>Projeto Eco</h1>
+                <h2>Gerenciamento</h2>
+            </div>
+        </div>
+        <h4 id="display-categoria-selecionada">Categoria selecionada: Campanhas</h4>
+        <nav class="nav-categoria">
+            <div class="categoria-container">
+                <button class="bt-categoria" id="bt-campanhas"><img src="images/donation.png" alt=""></button>
+                <h5>Campanhas</h5>
+            </div>
+            <div class="categoria-container">
+                <button class="bt-categoria" id="bt-pessoas"><img src="images/person.png" alt=""></button>
+                <h5>Pessoas</h5>
+            </div>
+            <div class="categoria-container">
+                <button class="bt-categoria" id="bt-dados-bancarios"><img src="images/bank_data.png" alt=""></button>
+                <h5>Dados Bancários</h5>
+            </div>
+            <div class="categoria-container">
+                <button class="bt-categoria" id="bt-alertas-desastres"><img src="images/alert.png" alt=""></button>
+                <h5>Alertas Desastres</h5>
+            </div>
+            <div class="categoria-container">
+                <button class="bt-categoria" id="bt-municipios"><img src="images/town.png" alt=""></button>
+                <h5>Municípios</h5>
+            </div>
+        </nav>
+        <nav class="nav-extra">
+            <button id="bt-ajuda"><img src="images/help.png" alt=""></button>
+            <button id="bt-sair"><img src="images/logout.png" alt=""></button>
+        </nav>
+    </header>
+    <main>
+        <!-- Formulário de campanhas-->
+        <div class="formulario" id="form-campanhas">
+            <h2>Formulário</h2>
+            <h3 class="display-codigo-registro-selecionado" id="display-campanha-selecionada-id">ID selecionado: 0</h3>
+            <div class="formulario-scroll" id="form-campanhas-scroll">
+                <div class="form-campo-container">
+                    <h5>Título</h5>
+                    <input type="text" name="" id="inp-campanha-titulo">
+                </div>
+                <div class="form-campo-container">
+                    <h5>Descrição</h5>
+                    <input type="text" name="" id="inp-campanha-descricao">
+                </div>
+                <div class="form-campo-container">
+                    <h5>Site</h5>
+                    <input type="text" name="" id="inp-campanha-site">
+                </div>
+                <div class="form-campo-container">
+                    <h5>Pessoa responsável (ID)</h5>
+                    <input type="text" name="" id="inp-campanha-pessoa-id">
+                </div>
+                <div class="form-campo-container">
+                    <h5>Dados bancários (ID)</h5>
+                    <input type="text" name="" id="inp-campanha-dados-bancarios-id">
+                </div>
+            </div>
+            <div>
+                <button class="bt-form" id="bt-criar-campanha">Criar</button>
+                <button class="bt-form" id="bt-atualizar-campanha">Atualizar</button>
+                <button class="bt-form" id="bt-remover-campanha">Remover</button>
+            </div>
+        </div>
+        <!-- Formulário de pessoas-->
+        <div class="formulario" id="form-pessoas">
+            <h2>Formulário</h2>
+            <h3 class="display-codigo-registro-selecionado" id="display-campanha-selecionada-id">ID selecionado: 0</h3>
+            <div class="formulario-scroll" id="form-pessoas-scroll">
+                <div class="form-campo-container">
+                    <h5>Nome</h5>
+                    <input type="text" name="" id="">
+                </div>
+                <div class="form-campo-container">
+                    <h5>CPF</h5>
+                    <input type="text" name="" id="">
+                </div>
+                <div class="form-campo-container">
+                    <h5>CNPJ</h5>
+                    <input type="text" name="" id="">
+                </div>
+                <div class="form-campo-container">
+                    <h5>RG</h5>
+                    <input type="text" name="" id="">
+                </div>
+                <div class="form-campo-container">
+                    <h5>Email</h5>
+                    <input type="text" name="" id="">
+                </div>
+                <div class="form-campo-container">
+                    <h5>Telefone</h5>
+                    <input type="text" name="" id="">
+                </div>
+            </div>
+            <div>
+                <button class="bt-form" id="bt-criar-campanha">Criar</button>
+                <button class="bt-form" id="bt-atualizar-campanha">Atualizar</button>
+                <button class="bt-form" id="bt-remover-campanha">Remover</button>
+            </div>
+        </div>
+        <!-- Registros -->
+        <div id="registros">
+            <h2>Registros</h2>
+            <div id="registros-scroll">
+                <div class="item-registro">
+                        <h5 class="item-registro-campo">Código: Valor</h5>
+                        <h5 class="item-registro-campo">Nome do campo: Valor</h5>
+                        <button>Selecionar</button>
+                        <button>Remover</button>
+                </div>
+            </div>
+        </div>
+        <!-- Mensagens do sistema -->
+         <div class="lista-mensagens-sistema">
+            <h2>Mensagens</h2>
+            <div class="lista-mensagens-sistema-scroll">
+                <p class="mensagem-sistema"><b>Bem vindo ao sistema de gerenciamento do Projeto Eco.</b><br><br>
+                <b>Selecionar categoria:</b> Primeiro selecione uma categoria no menu localizado no topo da página.<br><br>
+                <b>Criar registro:</b> Para criar um registro insira os dados no formulário e clique no botão "Criar".<br><br>
+                <b>Atualizar ou remover registro:</b> Primeiro deve-se escolher um registro na área central da página, 
+                clicando no botão "Selecionar" correspondente ao registro. Os dados do registro serão carregados no formulário permitindo a atualização dos dados, bem como a remoção do registro.</p>
+            </div>
+         </div>
+    </main>
+    <script src="js/principal.js"></script>
+</body>
+</html>
