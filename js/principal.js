@@ -16,46 +16,49 @@ let registroSelecionadoId= null;
 
 
 
-/* 
-    [Mocks]
-*/
+//_______________________________________________________________________________________________
+/* Consumo da API Eco */
+const apiBaseUrl = "http://localhost:8080";
 
-// Simular consumo da API do projeto
+async function apiRequest(endpoint, method="GET", body=null) {
+    const options = { method, headers: {} };
+    if (body) {
+        options.headers["Content-Type"] = "application/json";
+        options.body = JSON.stringify(body);
+    }
 
-// Campanhas
-// Simular objetos contidos na lista retornada pela API
-const campanha1 = {
-    "id":1,
-    "titulo":"Plante uma árvore",
-    "descricao":"Ajude a plantar uma árvore por apenas R$0,25.",
-    "site":null,
-    "pessoa_id":null,
-    "dados_bancarios_id":null
-}
-const campanha2 = {
-    "id":2,
-    "titulo":"Arrecadação",
-    "descricao":"Doe qualquer valor para ajudar as pessoas afetadas pelas fortes chuvas.",
-    "site":null,
-    "pessoa_id":null,
-    "dados_bancarios_id":null
-}
-// Simular a lista de objetos a ser retornada pela API
-const mockListaCampanhas = [
-    campanha1, campanha2
-]
-// GET /admin/campanhas
-function solicitarRegistrosCampanhas(){
-    return mockListaCampanhas;
+    const res = await fetch(`${apiBaseUrl}${endpoint}`, options);
+    if (!res.ok) throw new Error("Erro na requisição: " + res.status);
+    if(method==="DELETE"){
+        return [];
+    }
+    return res.json();
 }
 
+// Exemplos de uso:
+// const campanhas = await apiRequest("/admin/campanhas");
+// await apiRequest("/admin/campanhas", "POST", campanha);
+// await apiRequest(`/admin/campanhas/${id}`, "PUT", campanha);
 
 
 
 
+
+
+//_______________________________________________________________________________________________
 /* 
     [Controle da página]
 */
+
+// Função com retorno bool para indicar se um input esta vazio
+function inputEstaVazio(valor){
+    if(valor===""||valor===undefined||valor===null){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
 
 // Chamado ao trocar de categoria
 function limparRegistroSelecionadoId(){
@@ -63,17 +66,17 @@ function limparRegistroSelecionadoId(){
 }
 
 // Limpa os inputs do formulário
-function limparFormulario(){
+function limparTodosFormularios(){
     const listaDeInputs = document.querySelectorAll("input[type=text]");
     listaDeInputs.forEach(inp=>{
         inp.value = "";
     });
 }
 
-function atualizarFormRegistroSelecionado(registroJSON){
+function selecionarRegistro(registroJson){
     switch (categoriaSelecionada) {
         case "campanhas":
-            atualizaFormCampanha(registroJSON);
+            controleFormCampanha("carregar",registroJson);
             break;
         default:
             break;
@@ -110,17 +113,18 @@ function carregarFormulario(){
 }
 
 // Carregar registros
-function carregarRegistros(){
+async function carregarRegistrosDaCategoria(){
     // Container principal
     const containerRegistros = document.getElementById("registros");
     // Container contendo todos os registros individuais
     const containerRegistrosScroll = document.getElementById("registros-scroll");
+    containerRegistrosScroll.innerHTML = "";
     // Usado para defininr a lista de registros ativa no momento
     let listaDeRegistrosJSON = [];
     // Definir a lista de registros ativa
     switch (categoriaSelecionada) {
         case "campanhas":
-            listaDeRegistrosJSON = solicitarRegistrosCampanhas();
+            listaDeRegistrosJSON = await apiRequest("/admin/campanhas");
             break;
         default:
             listaDeRegistrosJSON = [];
@@ -128,24 +132,24 @@ function carregarRegistros(){
     }
     if(listaDeRegistrosJSON.length>0){
         containerRegistros.style.display = "flex";
-        listaDeRegistrosJSON.forEach(registroJSON=>{
+        listaDeRegistrosJSON.forEach(registroJson=>{
             // Criar um container para cada registro individual
             // usando a classe CSS item-registro
             let itemRegistro = document.createElement("div");
             itemRegistro.className="item-registro";
             // Criar agora elementos h5 para cada chave-valor do JSON
             // bem como adicionar o elemento h5 como filho de itemRegistro
-            for(let chave in registroJSON){
+            for(let chave in registroJson){
                 let novoH5 = document.createElement("h5");
                 novoH5.className = "item-registro-campo";
-                novoH5.textContent = `${chave}: ${registroJSON[chave]}`;
+                novoH5.textContent = `${chave}: ${registroJson[chave]}`;
                 itemRegistro.appendChild(novoH5);
             }
             // Botão de selecionar registro
             let btSelecionarRegistro = document.createElement("button");
             btSelecionarRegistro.textContent = "Selecionar";
             btSelecionarRegistro.addEventListener("click",()=>{
-                atualizarFormRegistroSelecionado(registroJSON);
+                selecionarRegistro(registroJson);
             })
             itemRegistro.appendChild(btSelecionarRegistro);
             containerRegistrosScroll.appendChild(itemRegistro);
@@ -157,42 +161,91 @@ function carregarRegistros(){
     }
 }
 
-// Atualizar o formulário referente a campanha
-// quando um novo registro é selecionado
-function atualizaFormCampanha(registroJSON){
-    registroSelecionadoId = registroJSON["id"];
+// Controle do formulário de campanha
+async function controleFormCampanha(acao="limpar", registroJson={}){
     const displayId = document.getElementById("display-campanha-selecionada-id");
     const inpTitulo = document.getElementById("inp-campanha-titulo");
     const inpDescricao = document.getElementById("inp-campanha-descricao");
     const inpSite = document.getElementById("inp-campanha-site");
     const inpPessoaId = document.getElementById("inp-campanha-pessoa-id");
     const inpDadosBancariosId = document.getElementById("inp-campanha-dados-bancarios-id");
-    displayId.textContent = `ID Selecionado: ${registroJSON["id"]}`;
-    inpTitulo.value = registroJSON["titulo"];
-    inpDescricao.value = registroJSON["descricao"];
-    inpSite.value = registroJSON["site"];
-    inpPessoaId.value = registroJSON["pessoa_id"];
-    inpDadosBancariosId.value = registroJSON["dados_bancarios_id"];
+    if(acao==="limpar"){
+        limparRegistroSelecionadoId();
+        displayId.textContent = `ID Selecionado: ${registroSelecionadoId}`;
+        limparTodosFormularios();
+    }
+    else if(acao==="carregar"){
+        registroSelecionadoId = registroJson["id"];
+        displayId.textContent = `ID Selecionado: ${registroJson["id"]}`;
+        inpTitulo.value = registroJson["titulo"];
+        inpDescricao.value = registroJson["descricao"];
+        inpSite.value = registroJson["site"];
+        inpPessoaId.value = registroJson["pessoaId"];
+        inpDadosBancariosId.value = registroJson["dadosBancariosId"];    
+    }
+    else if(acao==="criar"||acao==="atualizar"){
+        const bodyRequisicao = {
+            "titulo": inputEstaVazio(inpTitulo.value) ? "Nenhum" : inpTitulo.value,
+            "descricao": inputEstaVazio(inpDescricao.value) ? "Nenhum" : inpDescricao.value,
+            "site": inputEstaVazio(inpSite.value) ? null : inpSite.value,
+            "pessoaId": inputEstaVazio(inpPessoaId.value) ? null : inpPessoaId.value,
+            "dadosBancariosId": inputEstaVazio(inpDadosBancariosId.value) ? null : inpDadosBancariosId.value,
+        }
+        if(acao==="criar"){
+            limparRegistroSelecionadoId();
+            displayId.textContent = `ID Selecionado: ${registroSelecionadoId}`;
+            await apiRequest("/admin/campanhas","POST",bodyRequisicao);
+            carregarRegistrosDaCategoria();
+        }
+        else{
+            await apiRequest(`/admin/campanhas/${registroSelecionadoId}`,"PUT",bodyRequisicao);
+            carregarRegistrosDaCategoria();
+        }
+    }
+    else if(acao==="remover"){
+        await apiRequest(`/admin/campanhas/${registroSelecionadoId}`, "DELETE");
+        limparRegistroSelecionadoId();
+        carregarRegistrosDaCategoria();
+    }
+    else{
+        console.log("Erro em controleFormCampanha(): Argumento 'acao' inválido.")
+    }
 }
 
-
-
-// Adicionar eventos de click nos botões de selecionar categoria
-listaCategorias.forEach(nomeCategoria=>{
-    const bt = document.getElementById(`bt-${nomeCategoria}`);
-    if(bt!==null){
-        bt.addEventListener("click",()=>{
-            categoriaSelecionada = nomeCategoria;
-            atualizarHeader();
-            carregarFormulario();
-            limparFormulario();
-            carregarRegistros();
-            limparRegistroSelecionadoId();
-        })
-    }
-});
+//_______________________________________________________________________________________________
+/*
+    Configurar eventos
+*/
+function configurarEventos(){
+    // Adicionar eventos de click nos  botões
+    // Botões de selecionar categoria
+    listaCategorias.forEach(nomeCategoria=>{
+        const bt = document.getElementById(`bt-${nomeCategoria}`);
+        if(bt!==null){
+            bt.addEventListener("click",()=>{
+                categoriaSelecionada = nomeCategoria;
+                atualizarHeader();
+                carregarFormulario();
+                limparTodosFormularios();
+                carregarRegistrosDaCategoria();
+                limparRegistroSelecionadoId();
+            })
+        }
+    });
+    // Botões do formulário de campanha
+    document.getElementById("bt-criar-campanha").addEventListener("click",()=>{
+        controleFormCampanha("criar");
+    });
+    document.getElementById("bt-atualizar-campanha").addEventListener("click",()=>{
+        controleFormCampanha("atualizar");
+    });
+    document.getElementById("bt-remover-campanha").addEventListener("click",()=>{
+        controleFormCampanha("remover");
+    });
+}
 
 // Ao carregar a página
+configurarEventos();
 atualizarHeader();
 carregarFormulario();
-carregarRegistros();
+carregarRegistrosDaCategoria();
