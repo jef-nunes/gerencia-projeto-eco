@@ -45,7 +45,11 @@
             <button id="bt-sair"><img src="images/logout.png" alt=""></button>
         </nav>
     </header>
+
+
+
     <main>
+
         <!-- Formulário de campanhas-->
         <div class="formulario" id="form-campanhas">
             <h2>Formulário</h2>
@@ -78,42 +82,131 @@
                 <button class="bt-form" id="bt-remover-campanha">Remover</button>
             </div>
         </div>
+
         <!-- Formulário de pessoas-->
         <div class="formulario" id="form-pessoas">
             <h2>Formulário</h2>
-            <h3 class="display-codigo-registro-selecionado" id="display-campanha-selecionada-id">ID selecionado: 0</h3>
+            <h3 class="display-codigo-registro-selecionado" id="display-pessoa-selecionada-id">ID selecionado: 0</h3>
             <div class="formulario-scroll" id="form-pessoas-scroll">
                 <div class="form-campo-container">
                     <h5>Nome</h5>
-                    <input type="text" name="" id="">
+                    <input type="text" name="" id="inp-pessoa-nome">
                 </div>
                 <div class="form-campo-container">
                     <h5>CPF</h5>
-                    <input type="text" name="" id="">
+                    <input type="text" name="" id="inp-pessoa-cpf">
                 </div>
                 <div class="form-campo-container">
                     <h5>CNPJ</h5>
-                    <input type="text" name="" id="">
+                    <input type="text" name="" id="inp-pessoa-cnpj">
                 </div>
                 <div class="form-campo-container">
                     <h5>RG</h5>
-                    <input type="text" name="" id="">
+                    <input type="text" name="" id="inp-pessoa-rg">
                 </div>
                 <div class="form-campo-container">
                     <h5>Email</h5>
-                    <input type="text" name="" id="">
+                    <input type="text" name="" id="inp-pessoa-email">
                 </div>
                 <div class="form-campo-container">
                     <h5>Telefone</h5>
-                    <input type="text" name="" id="">
+                    <input type="text" name="" id="inp-pessoa-telefone">
                 </div>
             </div>
             <div>
-                <button class="bt-form" id="bt-criar-campanha">Criar</button>
-                <button class="bt-form" id="bt-atualizar-campanha">Atualizar</button>
-                <button class="bt-form" id="bt-remover-campanha">Remover</button>
+                <button class="bt-form" id="bt-criar-pessoa">Criar</button>
+                <button class="bt-form" id="bt-atualizar-pessoa">Atualizar</button>
+                <button class="bt-form" id="bt-remover-pessoa">Remover</button>
             </div>
         </div>
+
+        <!-- Formulário de dados bancários -->
+        <div class="formulario" id="form-dados-bancarios">
+            <h2>Formulário</h2>
+            <h3 class="display-codigo-registro-selecionado" id="display-dados-bancarios-selecionado-id">ID selecionado: 0</h3>
+            <div class="formulario-scroll" id="form-dados-bancarios-scroll">
+                <div class="form-campo-container">
+                    <h5>Banco</h5>
+                    <input type="text" name="" id="inp-dados-bancarios-banco">
+                </div>
+                <div class="form-campo-container">
+                    <h5>Agencia</h5>
+                    <input type="text" name="" id="inp-dados-bancarios-agencia">
+                </div>
+                <div class="form-campo-container">
+                    <h5>Conta</h5>
+                    <input type="text" name="" id="inp-dados-bancarios-conta">
+                </div>
+                <div class="form-campo-container">
+                    <h5>Chave pix</h5>
+                    <input type="text" name="" id="inp-dados-bancarios-chave-pix">
+                </div>
+            </div>
+            <div>
+                <button class="bt-form" id="bt-criar-dados-bancarios">Criar</button>
+                <button class="bt-form" id="bt-atualizar-dados-bancarios">Atualizar</button>
+                <button class="bt-form" id="bt-remover-dados-bancarios">Remover</button>
+            </div>
+        </div>
+
+        <!-- Formulário de município -->
+        <div class="formulario" id="form-municipios">
+            <h2>Formulário</h2>
+            <h3 class="display-codigo-registro-selecionado" id="display-municipio-selecionado-id">ID selecionado: 0</h3>
+            <div class="formulario-scroll" id="form-municipios-scroll">
+                <div class="form-campo-container">
+                    <h5>Nome</h5>
+                    <input type="text" name="" id="inp-municipio-nome">
+                </div>
+                <div class="form-campo-container">
+                    <h5>Estado</h5>
+                    <input type="text" name="" id="inp-municipio-estado">
+                </div>
+                <div class="form-campo-container">
+                    <h5>Região</h5>
+                    <input type="text" name="" id="inp-municipio-regiao">
+                </div>
+            </div>
+            <div>
+                <button class="bt-form" id="bt-criar-municipios">Criar</button>
+                <button class="bt-form" id="bt-atualizar-municipios">Atualizar</button>
+                <button class="bt-form" id="bt-remover-municipios">Remover</button>
+            </div>
+        </div>
+
+        <!-- Formulário de alerta de desastre -->
+        <div class="formulario" id="form-alertas-desastres">
+            <h2>Formulário</h2>
+            <h3 class="display-codigo-registro-selecionado" id="display-alerta-desastre-selecionado-id">ID selecionado: 0</h3>
+            <div class="formulario-scroll" id="form-alertas-desastres-scroll">
+                <div class="form-campo-container">
+                    <h5>Titulo</h5>
+                    <input type="text" name="" id="inp-municipio-titulo">
+                </div>
+                <div class="form-campo-container">
+                    <h5>Descrição</h5>
+                    <input type="text" name="" id="inp-municipio-descricao">
+                </div>
+                <div class="form-campo-container">
+                    <h5>Nível</h5>
+                    <input type="text" name="" id="inp-municipio-nivel">
+                </div>
+                <div class="form-campo-container">
+                    <h5>Categoria</h5>
+                    <input type="text" name="" id="inp-municipio-categoria">
+                </div>
+                <div class="form-campo-container">
+                    <h5>Data</h5>
+                    <input type="text" name="" id="inp-municipio-data">
+                </div>
+            </div>
+            <div>
+                <button class="bt-form" id="bt-criar-alerta-desastre">Criar</button>
+                <button class="bt-form" id="bt-atualizar-alerta-desastre">Atualizar</button>
+                <button class="bt-form" id="bt-remover-alerta-desastre">Remover</button>
+            </div>
+        </div>
+
         <!-- Registros -->
         <div id="registros">
             <h2>Registros</h2>
@@ -126,6 +219,7 @@
                 </div>
             </div>
         </div>
+
         <!-- Mensagens do sistema -->
          <div class="lista-mensagens-sistema">
             <h2>Mensagens</h2>
@@ -137,7 +231,9 @@
                 clicando no botão "Selecionar" correspondente ao registro. Os dados do registro serão carregados no formulário permitindo a atualização dos dados, bem como a remoção do registro.</p>
             </div>
          </div>
+
     </main>
+
     <script src="js/principal.js"></script>
 </body>
 </html>
