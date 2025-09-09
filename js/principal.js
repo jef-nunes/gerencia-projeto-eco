@@ -251,12 +251,12 @@ async function controleFormPessoas(acao="limpar", registroJson={}){
     }
     else if(acao==="criar"||acao==="atualizar"){
         const bodyRequisicao = {
-            "nome": inputEstaVazio(inpTitulo.value) ? "Inválido" : inpTitulo.value,
-            "cpf": inputEstaVazio(inpDescricao.value) ? null : inpDescricao.value,
-            "cnpj": inputEstaVazio(inpSite.value) ? null : inpSite.value,
-            "rg": inputEstaVazio(inpPessoaId.value) ? null : inpPessoaId.value,
-            "telefone": inputEstaVazio(inpDadosBancariosId.value) ? "Inválido" : parseInt(inpDadosBancariosId.value),
-            "email": inputEstaVazio(inpDadosBancariosId.value) ? "Inválido" : parseInt(inpDadosBancariosId.value)
+            "nome": inputEstaVazio(inpNome.value) ? "Inválido" : inpNome.value,
+            "cpf": inputEstaVazio(inpCpf.value) ? null : inpCpf.value,
+            "cnpj": inputEstaVazio(inpCnpj.value) ? null : inpCnpj.value,
+            "rg": inputEstaVazio(inpRg.value) ? null : inpRg.value,
+            "telefone": inputEstaVazio(inpTelefone.value) ? "Inválido" : inpTelefone.value,
+            "email": inputEstaVazio(inpEmail.value) ? "Inválido" : inpEmail.value
 
         }
         if(acao==="criar"){
@@ -276,7 +276,56 @@ async function controleFormPessoas(acao="limpar", registroJson={}){
         carregarRegistrosDaCategoria();
     }
     else{
-        console.log("Erro em controleFormCampanha(): Argumento 'acao' inválido.")
+        console.log("Erro em controleFormPessoas(): Argumento 'acao' inválido.")
+    }
+}
+
+// Controle do formulário de dados bancários
+async function controleFormDadosBancarios(acao="limpar", registroJson={}){
+    const displayId = document.getElementById("display-pessoa-selecionada-id");
+    const inpBanco= document.getElementById("inp-dados-bancarios-banco");
+    const inpAgencia = document.getElementById("inp-dados-bancarios-agencia");
+    const inpConta = document.getElementById("inp-dados-bancarios-conta");
+    const inpChavePix = document.getElementById("inp-dados-bancarios-chave-pix");
+
+    if(acao==="limpar"){
+        limparRegistroSelecionadoId();
+        displayId.textContent = `ID Selecionado: ${registroSelecionadoId}`;
+        limparTodosFormularios();
+    }
+    else if(acao==="carregar"){
+        registroSelecionadoId = registroJson["id"];
+        displayId.textContent = `ID Selecionado: ${registroJson["id"]}`;
+        inpBanco.value = registroJson["banco"];
+        inpAgencia.value = registroJson["agencia"];
+        inpConta.value = registroJson["conta"];
+        inpChavePix.value = registroJson["chavePix"];
+    }
+    else if(acao==="criar"||acao==="atualizar"){
+        const bodyRequisicao = {
+            "banco": inputEstaVazio(inpBanco.value) ? "Inválido" : inpBanco.value,
+            "agencia": inputEstaVazio(inpAgencia.value) ? null : inpAgencia.value,
+            "conta": inputEstaVazio(inpConta.value) ? null : inpConta.value,
+            "chavePix": inputEstaVazio(inpChavePix.value) ? null : inpChavePix.value,
+        }
+        if(acao==="criar"){
+            limparRegistroSelecionadoId();
+            displayId.textContent = `ID Selecionado: ${registroSelecionadoId}`;
+            await apiRequest("/admin/dados-bancarios","POST",bodyRequisicao);
+            carregarRegistrosDaCategoria();
+        }
+        else{
+            await apiRequest(`/admin/dados-bancarios/${registroSelecionadoId}`,"PUT",bodyRequisicao);
+            carregarRegistrosDaCategoria();
+        }
+    }
+    else if(acao==="remover"){
+        await apiRequest(`/admin/dados-bancarios/${registroSelecionadoId}`, "DELETE");
+        limparRegistroSelecionadoId();
+        carregarRegistrosDaCategoria();
+    }
+    else{
+        console.log("Erro em controleFormDadosBancarios(): Argumento 'acao' inválido.")
     }
 }
 
