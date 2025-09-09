@@ -126,6 +126,18 @@ async function carregarRegistrosDaCategoria(){
         case "campanhas":
             listaDeRegistrosJSON = await apiRequest("/admin/campanhas");
             break;
+        case "pessoas":
+            listaDeRegistrosJSON = await apiRequest("/admin/pessoas");
+            break;
+        case "dados-bancarios":
+            listaDeRegistrosJSON = await apiRequest("/admin/dados-bancarios");
+            break;
+        case "municipios":
+            listaDeRegistrosJSON = await apiRequest("/admin/municipios");
+            break;
+        case "alertas-desastres":
+            listaDeRegistrosJSON = await apiRequest("/admin/alertas-desastres");
+            break;
         default:
             listaDeRegistrosJSON = [];
             break;
@@ -185,11 +197,11 @@ async function controleFormCampanha(acao="limpar", registroJson={}){
     }
     else if(acao==="criar"||acao==="atualizar"){
         const bodyRequisicao = {
-            "titulo": inputEstaVazio(inpTitulo.value) ? "Nenhum" : inpTitulo.value,
-            "descricao": inputEstaVazio(inpDescricao.value) ? "Nenhum" : inpDescricao.value,
+            "titulo": inputEstaVazio(inpTitulo.value) ? "Inválido" : inpTitulo.value,
+            "descricao": inputEstaVazio(inpDescricao.value) ? "Inválido" : inpDescricao.value,
             "site": inputEstaVazio(inpSite.value) ? null : inpSite.value,
-            "pessoaId": inputEstaVazio(inpPessoaId.value) ? null : inpPessoaId.value,
-            "dadosBancariosId": inputEstaVazio(inpDadosBancariosId.value) ? null : inpDadosBancariosId.value,
+            "pessoaId": inputEstaVazio(inpPessoaId.value) ? null : parseInt(inpPessoaId.value),
+            "dadosBancariosId": inputEstaVazio(inpDadosBancariosId.value) ? null : parseInt(inpDadosBancariosId.value)
         }
         if(acao==="criar"){
             limparRegistroSelecionadoId();
@@ -211,6 +223,63 @@ async function controleFormCampanha(acao="limpar", registroJson={}){
         console.log("Erro em controleFormCampanha(): Argumento 'acao' inválido.")
     }
 }
+
+// Controle do formulário de pessoas
+async function controleFormPessoas(acao="limpar", registroJson={}){
+    const displayId = document.getElementById("display-pessoa-selecionada-id");
+    const inpNome = document.getElementById("inp-pessoa-nome");
+    const inpCpf = document.getElementById("inp-pessoa-cpf");
+    const inpCnpj = document.getElementById("inp-pessoa-cnpj");
+    const inpRg = document.getElementById("inp-pessoa-rg");
+    const inpTelefone = document.getElementById("inp-pessoa-telefone");
+    const inpEmail = document.getElementById("inp-pessoa-email");
+
+    if(acao==="limpar"){
+        limparRegistroSelecionadoId();
+        displayId.textContent = `ID Selecionado: ${registroSelecionadoId}`;
+        limparTodosFormularios();
+    }
+    else if(acao==="carregar"){
+        registroSelecionadoId = registroJson["id"];
+        displayId.textContent = `ID Selecionado: ${registroJson["id"]}`;
+        inpNome.value = registroJson["nome"];
+        inpCpf.value = registroJson["cpf"];
+        inpCnpj.value = registroJson["cnpj"];
+        inpRg.value = registroJson["rg"];
+        inpTelefone.value = registroJson["telefone"];
+        inpEmail.value = registroJson["email"];
+    }
+    else if(acao==="criar"||acao==="atualizar"){
+        const bodyRequisicao = {
+            "nome": inputEstaVazio(inpTitulo.value) ? "Inválido" : inpTitulo.value,
+            "cpf": inputEstaVazio(inpDescricao.value) ? null : inpDescricao.value,
+            "cnpj": inputEstaVazio(inpSite.value) ? null : inpSite.value,
+            "rg": inputEstaVazio(inpPessoaId.value) ? null : inpPessoaId.value,
+            "telefone": inputEstaVazio(inpDadosBancariosId.value) ? "Inválido" : parseInt(inpDadosBancariosId.value),
+            "email": inputEstaVazio(inpDadosBancariosId.value) ? "Inválido" : parseInt(inpDadosBancariosId.value)
+
+        }
+        if(acao==="criar"){
+            limparRegistroSelecionadoId();
+            displayId.textContent = `ID Selecionado: ${registroSelecionadoId}`;
+            await apiRequest("/admin/pessoas","POST",bodyRequisicao);
+            carregarRegistrosDaCategoria();
+        }
+        else{
+            await apiRequest(`/admin/pessoas/${registroSelecionadoId}`,"PUT",bodyRequisicao);
+            carregarRegistrosDaCategoria();
+        }
+    }
+    else if(acao==="remover"){
+        await apiRequest(`/admin/pessoas/${registroSelecionadoId}`, "DELETE");
+        limparRegistroSelecionadoId();
+        carregarRegistrosDaCategoria();
+    }
+    else{
+        console.log("Erro em controleFormCampanha(): Argumento 'acao' inválido.")
+    }
+}
+
 
 //_______________________________________________________________________________________________
 /*
