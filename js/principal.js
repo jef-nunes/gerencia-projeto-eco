@@ -76,7 +76,7 @@ function limparTodosFormularios(){
 function selecionarRegistro(registroJson){
     switch (categoriaSelecionada) {
         case "campanhas":
-            controleFormCampanha("carregar",registroJson);
+            controleFormCampanhas("carregar",registroJson);
             break;
         default:
             break;
@@ -173,8 +173,8 @@ async function carregarRegistrosDaCategoria(){
     }
 }
 
-// Controle do formulário de campanha
-async function controleFormCampanha(acao="limpar", registroJson={}){
+// Controle do formulário de campanhas
+async function controleFormCampanhas(acao="limpar", registroJson={}){
     const displayId = document.getElementById("display-campanha-selecionada-id");
     const inpTitulo = document.getElementById("inp-campanha-titulo");
     const inpDescricao = document.getElementById("inp-campanha-descricao");
@@ -220,7 +220,7 @@ async function controleFormCampanha(acao="limpar", registroJson={}){
         carregarRegistrosDaCategoria();
     }
     else{
-        console.log("Erro em controleFormCampanha(): Argumento 'acao' inválido.")
+        console.log("Erro em controleFormCampanhas(): Argumento 'acao' inválido.")
     }
 }
 
@@ -282,7 +282,7 @@ async function controleFormPessoas(acao="limpar", registroJson={}){
 
 // Controle do formulário de dados bancários
 async function controleFormDadosBancarios(acao="limpar", registroJson={}){
-    const displayId = document.getElementById("display-pessoa-selecionada-id");
+    const displayId = document.getElementById("display-dados-bancarios-selecionado-id");
     const inpBanco= document.getElementById("inp-dados-bancarios-banco");
     const inpAgencia = document.getElementById("inp-dados-bancarios-agencia");
     const inpConta = document.getElementById("inp-dados-bancarios-conta");
@@ -329,6 +329,103 @@ async function controleFormDadosBancarios(acao="limpar", registroJson={}){
     }
 }
 
+// Controle do formulário de municípios
+async function controleFormMunicipios(acao="limpar", registroJson={}){
+    const displayId = document.getElementById("display-municipio-selecionado-id");
+    const inpNome = document.getElementById("inp-municipio-nome");
+    const inpEstado = document.getElementById("inp-municipio-estado");
+    const inpRegiao = document.getElementById("inp-municipio-regiao");
+
+    if(acao==="limpar"){
+        limparRegistroSelecionadoId();
+        displayId.textContent = `ID Selecionado: ${registroSelecionadoId}`;
+        limparTodosFormularios();
+    }
+    else if(acao==="carregar"){
+        registroSelecionadoId = registroJson["id"];
+        displayId.textContent = `ID Selecionado: ${registroJson["id"]}`;
+        inpNome = registroJson["nome"];
+        inpEstado = registroJson["estado"];
+        inpRegiao = registroJson["regiao"];
+    }
+    else if(acao==="criar"||acao==="atualizar"){
+        const bodyRequisicao = {
+            "nome": inputEstaVazio(inpNome.value) ? "Inválido" : inpNome.value,
+            "estado": inputEstaVazio(inpEstado.value) ? "Inválido" : inpEstado.value,
+            "regiao": inputEstaVazio(inpRegiao.value) ? "Inválido" : inpRegiao.value
+        }
+        if(acao==="criar"){
+            limparRegistroSelecionadoId();
+            displayId.textContent = `ID Selecionado: ${registroSelecionadoId}`;
+            await apiRequest("/admin/municipios","POST",bodyRequisicao);
+            carregarRegistrosDaCategoria();
+        }
+        else{
+            await apiRequest(`/admin/municipios/${registroSelecionadoId}`,"PUT",bodyRequisicao);
+            carregarRegistrosDaCategoria();
+        }
+    }
+    else if(acao==="remover"){
+        await apiRequest(`/admin/municipios/${registroSelecionadoId}`, "DELETE");
+        limparRegistroSelecionadoId();
+        carregarRegistrosDaCategoria();
+    }
+    else{
+        console.log("Erro em controleFormMunicipios(): Argumento 'acao' inválido.")
+    }
+}
+
+// Controle do formulário de alertas de desastre
+async function controleFormAlertasDesastres(acao="limpar", registroJson={}){
+    const displayId = document.getElementById("display-alerta-desastre-selecionado-id");
+    const inpTitulo = document.getElementById("inp-alerta-desastre-titulo");
+    const inpDescricao = document.getElementById("inp-alerta-desastre-descricao");
+    const inpNivel = document.getElementById("inp-alerta-desastre-nivel");
+    const inpCategoria = document.getElementById("inp-alerta-desastre-categoria");
+    const inpData = document.getElementById("inp-alerta-desastre-data");
+
+    if(acao==="limpar"){
+        limparRegistroSelecionadoId();
+        displayId.textContent = `ID Selecionado: ${registroSelecionadoId}`;
+        limparTodosFormularios();
+    }
+    else if(acao==="carregar"){
+        registroSelecionadoId = registroJson["id"];
+        displayId.textContent = `ID Selecionado: ${registroJson["id"]}`;
+        inpTitulo = registroJson["titulo"];
+        inpDescricao = registroJson["descricao"];
+        inpNivel = registroJson["nivel"];
+        inpCategoria = registroJson["categoria"];
+        inpData = registroJson["data"];
+    }
+    else if(acao==="criar"||acao==="atualizar"){
+        const bodyRequisicao = {
+            "titulo": inputEstaVazio(inpTitulo.value) ? "Inválido" : inpTitulo.value,
+            "descricao": inputEstaVazio(inpDescricao.value) ? null : inpDescricao.value,
+            "nivel": inputEstaVazio(inpNivel.value) ? "Inválido" : inpNivel.value,
+            "categoria": inputEstaVazio(inpCategoria.value) ? "Inválido" : inpCategoria.value,
+            "data": inputEstaVazio(inpData.value) ? "Inválido" : inpData.value,
+        }
+        if(acao==="criar"){
+            limparRegistroSelecionadoId();
+            displayId.textContent = `ID Selecionado: ${registroSelecionadoId}`;
+            await apiRequest("/admin/alertas-desastres","POST",bodyRequisicao);
+            carregarRegistrosDaCategoria();
+        }
+        else{
+            await apiRequest(`/admin/alertas-desastres/${registroSelecionadoId}`,"PUT",bodyRequisicao);
+            carregarRegistrosDaCategoria();
+        }
+    }
+    else if(acao==="remover"){
+        await apiRequest(`/admin/alertas-desastres/${registroSelecionadoId}`, "DELETE");
+        limparRegistroSelecionadoId();
+        carregarRegistrosDaCategoria();
+    }
+    else{
+        console.log("Erro em controleFormMunicipios(): Argumento 'acao' inválido.")
+    }
+}
 
 //_______________________________________________________________________________________________
 /*
@@ -352,13 +449,13 @@ function configurarEventos(){
     });
     // Botões do formulário de campanha
     document.getElementById("bt-criar-campanha").addEventListener("click",()=>{
-        controleFormCampanha("criar");
+        controleFormCampanhas("criar");
     });
     document.getElementById("bt-atualizar-campanha").addEventListener("click",()=>{
-        controleFormCampanha("atualizar");
+        controleFormCampanhas("atualizar");
     });
     document.getElementById("bt-remover-campanha").addEventListener("click",()=>{
-        controleFormCampanha("remover");
+        controleFormCampanhas("remover");
     });
 }
 
